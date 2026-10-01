@@ -1,0 +1,61 @@
+# secrets / local config (keep the example)
+.env
+.env.*
+!.env.example
+
+# dependencies and build output
+node_modules/
+.next/
+.next-e2e/
+dist/
+build/
+coverage/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# test and report artifacts
+playwright-report/
+test-results/
+blob-report/
+.pytest_cache/
+.pytest_tmp/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+*.trace.zip
+trace/
+screenshots/
+
+# Python environments and bytecode
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# databases (SQLite incl. WAL/SHM) and project-local temporary PostgreSQL data
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+.pgdata/
+.e2e/
+
+# logs
+*.log
+logs/
+npm-debug.log*
+
+# OS / editor artifacts
+.DS_Store
+.AppleDouble
+Thumbs.db
+.idea/
+.vscode/
+*.swp

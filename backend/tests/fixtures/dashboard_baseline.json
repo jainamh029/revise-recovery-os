@@ -1,0 +1,132 @@
+{
+ "active_cohorts": 3,
+ "actual_cm_to_date": 90219.64,
+ "aged_inventory_value": 6888.969733333333,
+ "alert_counts": {
+  "critical": 2,
+  "warning": 6
+ },
+ "alert_ids_count": 8,
+ "cash_collected_this_month": 51566.8,
+ "cash_tied_up_inventory": 49775.38211078431,
+ "cells": [
+  {
+   "downtime_hours": 5.68,
+   "name": "Cell A",
+   "productive_hours": 85.54,
+   "scheduled_hours": 120.0,
+   "status": "available",
+   "utilization": 0.7128333333333333
+  },
+  {
+   "downtime_hours": 0,
+   "name": "Cell B",
+   "productive_hours": 0,
+   "scheduled_hours": 120.0,
+   "status": "available",
+   "utilization": 0
+  },
+  {
+   "downtime_hours": 4.89,
+   "name": "Cell C",
+   "productive_hours": 85.63,
+   "scheduled_hours": 120.0,
+   "status": "available",
+   "utilization": 0.7135833333333333
+  },
+  {
+   "downtime_hours": 25.39,
+   "name": "Cell D",
+   "productive_hours": 67.8,
+   "scheduled_hours": 120.0,
+   "status": "available",
+   "utilization": 0.565
+  },
+  {
+   "downtime_hours": 0,
+   "name": "Cell E",
+   "productive_hours": 0,
+   "scheduled_hours": 72.0,
+   "status": "maintenance",
+   "utilization": 0
+  }
+ ],
+ "cohort_rows": {
+  "EDU-001": {
+   "actual_cm": 49884.94,
+   "cash_exposure": -202.32,
+   "forecast_cm": 50539.47441034956,
+   "inventory_value": 5136.448,
+   "plan_cm": 44089.47,
+   "status": "partially_sold"
+  },
+  "EDU-005": {
+   "actual_cm": null,
+   "cash_exposure": null,
+   "forecast_cm": null,
+   "inventory_value": null,
+   "plan_cm": null,
+   "status": "under_review"
+  },
+  "ENT-003": {
+   "actual_cm": 80254.08,
+   "cash_exposure": 31056.31,
+   "forecast_cm": 77649.24038376036,
+   "inventory_value": 4428.6234,
+   "plan_cm": 73115.27,
+   "status": "partially_sold"
+  },
+  "ITAD-002": {
+   "actual_cm": -39919.38,
+   "cash_exposure": 53439.11,
+   "forecast_cm": 4481.807692288252,
+   "inventory_value": 40210.31071078432,
+   "plan_cm": 32616.45,
+   "status": "in_processing"
+  },
+  "ITAD-006": {
+   "actual_cm": null,
+   "cash_exposure": null,
+   "forecast_cm": null,
+   "inventory_value": null,
+   "plan_cm": null,
+   "status": "under_review"
+  },
+  "REC-004": {
+   "actual_cm": null,
+   "cash_exposure": null,
+   "forecast_cm": null,
+   "inventory_value": null,
+   "plan_cm": null,
+   "status": "declined"
+  }
+ },
+ "collections_buckets": {
+  "1-30": 39545.7,
+  "31-60": 71764.69,
+  "60+": 0,
+  "current": 63202.35
+ },
+ "committed_cohorts": 0,
+ "exception_rate": 0.13333333333333333,
+ "forecast_cm": 132670.52248639817,
+ "inventory_aging": {
+  "0-15": 47293.64477941176,
+  "16-30": 0,
+  "31-45": 0,
+  "45+": 6888.969733333333
+ },
+ "overdue_collections": 111310.39,
+ "partner_scores": {
+  "Atlas Wholesale (B2B resale)": null,
+  "Cascadia State University": 94.3,
+  "GreenLoop Recycling Co.": null,
+  "Meridian ITAD Services": 35.0,
+  "Northbridge Financial Group": 87.5
+ },
+ "pending_review": 2,
+ "plan_cm": 149821.19,
+ "throughput_actual_14d": 415,
+ "throughput_plan_14d": 406.5,
+ "utilization": 0.49785416666666665
+}

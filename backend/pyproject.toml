@@ -1,0 +1,14 @@
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
+ignore = ["E501", "B008"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Test databases live inside the project (gitignored) so cleanup never has to touch anything outside it.
+addopts = "--basetemp=.pytest_tmp -p no:cacheprovider"
+pythonpath = ["."]
+filterwarnings = ["ignore::sqlalchemy.exc.SAWarning"]

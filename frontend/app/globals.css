@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #f5f3ee;
+  --surface: #ffffff;
+  --ink: #14181f;
+  --muted: #667085;
+  --line: #e4e0d6;
+  --side: #0f1318;
+  --brand: #e2542b;
+  --good: #19704a;
+  --warn: #a8660b;
+  --bad: #b7352a;
+  --info: #2b56a0;
+  --good-bg: #e6f3ec;
+  --warn-bg: #fbf0dc;
+  --bad-bg: #fbe7e4;
+  --info-bg: #e5edf9;
+}
+
+html { color-scheme: light; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-sans), system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+.num { font-family: var(--font-mono), ui-monospace, monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.eyebrow { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+
+/* Grid items must be allowed to shrink, otherwise wide tables stretch the page instead of scrolling in their own wrapper. */
+main [class*="grid"] > * { min-width: 0; }
+
+@layer components {
+  .card { @apply rounded-xl border border-line bg-surface shadow-card; }
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-surface px-3 py-1.5 text-sm font-medium text-ink transition hover:bg-paper disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink; }
+  .btn-primary { @apply border-ink bg-ink text-white hover:bg-ink/90; }
+  .btn-danger { @apply border-bad bg-bad text-white hover:bg-bad/90; }
+  .input { @apply w-full rounded-lg border border-line bg-surface px-3 py-1.5 text-sm text-ink placeholder:text-muted/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink; }
+  .th { @apply px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wider text-muted; }
+  .td { @apply px-3 py-2.5 text-sm; }
+}
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
