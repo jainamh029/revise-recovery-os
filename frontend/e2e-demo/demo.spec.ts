@@ -63,8 +63,7 @@ test("a cohort deep link works after a refresh, and Reset demo restores the pris
   await open(page, "cohorts/");
   await page.getByRole("link", { name: "EDU-005" }).click();
   await expect(page.getByText("System recommendation")).toBeVisible({ timeout: 60_000 });
-  const url = page.url();
-  expect(url).toMatch(/\/cohort\/\?id=/);
+  await expect(page).toHaveURL(/\/cohort\/\?id=/);
   await page.getByPlaceholder("Why accept, modify or decline?").fill("x");
   await page.getByRole("button", { name: "Approve", exact: true }).click();
   await expect(page.getByText(/immutable/i)).toBeVisible({ timeout: 30_000 });
