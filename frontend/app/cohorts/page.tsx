@@ -7,6 +7,7 @@ import DrillPage from "@/components/DrillPage";
 import { Card, DecisionChip, ErrorBox, Hint, Loading, PageHeader, StatusChip, Tabs, Table } from "@/components/ui";
 import { useApi } from "@/lib/hooks";
 import { dateShort, money, n, pct } from "@/lib/format";
+import { cohortHref } from "@/lib/nav";
 
 const GROUPS: Record<string, (s: string) => boolean> = {
   all: () => true,
@@ -55,7 +56,7 @@ function Cohorts() {
             {rows.map((c) => (
               <tr key={c.id} className="hover:bg-paper/60">
                 <td className="td">
-                  <Link href={`/cohorts/${c.id}`} className="font-semibold hover:underline"><span className="num">{c.code}</span></Link>
+                  <Link href={cohortHref(c.id)} className="font-semibold hover:underline"><span className="num">{c.code}</span></Link>
                   <div className="text-xs text-muted">{c.partner} · intake {dateShort(c.intake_date)}</div>
                 </td>
                 <td className="td"><StatusChip status={c.status} /></td>

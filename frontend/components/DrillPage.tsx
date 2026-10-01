@@ -5,7 +5,9 @@ import { Suspense, useMemo } from "react";
 import { ArrowLeft, CheckCircle2, Download, TriangleAlert } from "lucide-react";
 import { Card, Chip, Empty, ErrorBox, Loading, PageHeader, Stat, Table } from "@/components/ui";
 import { FILTER_KEYS } from "@/components/DashboardFilters";
+import { downloadFile } from "@/lib/download";
 import { useApi } from "@/lib/hooks";
+import { normalizeHref } from "@/lib/nav";
 import { dateShort, money, n, pct, titleCase } from "@/lib/format";
 
 type Col = { key: string; label: string; type: string; href_key?: string };
@@ -19,7 +21,7 @@ const fmtCell = (c: Col, v: any, row: any) => {
     case "pct": return <span className="num">{pct(+v, 1)}</span>;
     case "date": return <span className="num">{String(v).length > 10 ? dateShort(String(v).slice(0, 10)) : dateShort(String(v))}</span>;
     case "chip": return <Chip>{titleCase(String(v))}</Chip>;
-    case "link": return c.href_key && row[c.href_key] ? <Link className="font-semibold underline underline-offset-2" href={row[c.href_key]}>{String(v)}</Link> : <span>{String(v)}</span>;
+    case "link": return c.href_key && row[c.href_key] ? <Link className="font-semibold underline underline-offset-2" href={normalizeHref(row[c.href_key])!}>{String(v)}</Link> : <span>{String(v)}</span>;
     default: return <span>{String(v)}</span>;
   }
 };
@@ -60,9 +62,10 @@ function Inner({ metric }: { metric: string }) {
         title={d.title}
         subtitle={<span className="flex flex-wrap items-center gap-2"><Chip tone={d.basis === "dated" ? "info" : "neutral"} className="!text-[12px]"><span data-testid="basis-label">{d.basis_label}</span></Chip></span>}
         actions={d.tables.map((t: any, i: number) => (
-          <a key={t.id} className="btn" data-testid={i === 0 ? "export-csv" : `export-csv-${t.id}`} href={`/api/drilldown/${metric}/export.csv?${new URLSearchParams([...all.entries(), ...(i ? [["table", t.id]] : [])] as any)}`} download>
+          <button key={t.id} className="btn" data-testid={i === 0 ? "export-csv" : `export-csv-${t.id}`}
+            onClick={() => downloadFile(`/api/drilldown/${metric}/export.csv?${new URLSearchParams([...all.entries(), ...(i ? [["table", t.id]] : [])] as any)}`, `${metric}${i ? `-${t.id}` : ""}.csv`)}>
             <Download className="h-4 w-4" /> Export CSV{d.tables.length > 1 ? ` · ${t.id}` : ""}
-          </a>
+          </button>
         ))}
       />
 

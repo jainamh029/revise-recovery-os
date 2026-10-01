@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import DrillPage from "@/components/DrillPage";
 import { Card, Chip, Empty, ErrorBox, Loading, PageHeader, SeverityChip, Tabs } from "@/components/ui";
+import { cohortHref } from "@/lib/nav";
 import { api } from "@/lib/api";
 import { useApi } from "@/lib/hooks";
 import { dateShort, titleCase } from "@/lib/format";
@@ -44,7 +45,7 @@ function Alerts() {
                 <p className="mt-0.5 text-sm text-muted">{a.description}</p>
                 {a.recommended_action && <p className="mt-2 text-sm"><span className="font-semibold">Recommended: </span>{a.recommended_action}</p>}
               </div>
-              {a.cohort_id && <Link className="btn" href={`/cohorts/${a.cohort_id}`}>Open {a.cohort_code}</Link>}
+              {a.cohort_id && <Link className="btn" href={cohortHref(a.cohort_id)}>Open {a.cohort_code}</Link>}
             </div>
             {a.comments.length > 0 && (
               <ul className="mt-3 space-y-1 border-l-2 border-line pl-3 text-xs text-muted">

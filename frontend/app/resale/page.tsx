@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { C, axis, gridProps, tooltipStyle } from "@/components/charts";
 import { Card, Chip, Empty, ErrorBox, Field, Loading, PageHeader, Stat, Table } from "@/components/ui";
+import { cohortHref } from "@/lib/nav";
 import { api } from "@/lib/api";
 import { useApi } from "@/lib/hooks";
 import { dateShort, money, n } from "@/lib/format";
@@ -90,7 +91,7 @@ export default function Resale() {
             <thead className="border-b border-line"><tr><th className="th">Cohort</th><th className="th">Channel</th><th className="th text-right">Listed</th><th className="th text-right">Sold</th><th className="th text-right">Unsold</th><th className="th text-right">Age</th></tr></thead>
             <tbody className="divide-y divide-line">
               {(listings.data ?? []).map((l) => (
-                <tr key={l.id}><td className="td"><Link className="num font-semibold hover:underline" href={`/cohorts/${l.cohort_id}`}>{codes[l.cohort_id]}</Link></td><td className="td">{l.listing_channel}</td>
+                <tr key={l.id}><td className="td"><Link className="num font-semibold hover:underline" href={cohortHref(l.cohort_id)}>{codes[l.cohort_id]}</Link></td><td className="td">{l.listing_channel}</td>
                   <td className="td num text-right">{n(l.device_count)}</td><td className="td num text-right">{n(l.units_sold)}</td><td className="td num text-right">{n(l.units_unsold)}</td>
                   <td className="td num text-right">{l.age_days != null ? <span className={l.age_days > 45 && l.units_unsold > 0 ? "font-semibold text-warn" : ""}>{l.age_days}d</span> : "—"}</td></tr>
               ))}

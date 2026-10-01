@@ -59,3 +59,13 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# static Pages demo: generated at build time (worker.js and bootstrap.py ARE source and stay tracked)
+frontend/out/
+frontend/public/demo/app.zip
+frontend/public/demo/demo.db
+frontend/public/demo/manifest.json
+frontend/public/demo/wheels/
+.demo-stash/
+.spike/
+.demo-site/

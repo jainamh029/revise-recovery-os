@@ -6,6 +6,12 @@
 
 ---
 
+## Live demo
+
+**https://jainamh029.github.io/revise-recovery-os/** — the full app, no install. The real FastAPI backend runs inside your browser (Pyodide / WebAssembly) on a pre-seeded **synthetic** database; nothing is sent to a server. Notes: the first load downloads roughly 15–20 MB (Python runtime, cached afterwards); changes you make (approvals, capacity assignments) live in memory and reset on reload — or use **Reset demo**. Rebuilt on every push to `main` by `.github/workflows/pages.yml`; build locally with `scripts/build_pages.sh`.
+
+---
+
 ## 1. What it is
 
 A cohort-level decision and tracking system: a FastAPI backend that owns every financial, capacity, decision and alert calculation, and a Next.js frontend that displays results and collects validated input. It underwrites an incoming batch of used laptops *before* robot time or cash is committed, then tracks actual throughput, exceptions, cost, resale recovery and collections against the approved plan, down to serial-numbered devices.

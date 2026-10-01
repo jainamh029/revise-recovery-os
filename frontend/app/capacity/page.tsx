@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Card, Chip, DecisionChip, Empty, ErrorBox, Field, Loading, PageHeader, Table } from "@/components/ui";
+import { cohortHref } from "@/lib/nav";
 import { api } from "@/lib/api";
 import { useApi } from "@/lib/hooks";
 import { dateShort, money, n, pct, titleCase } from "@/lib/format";
@@ -90,7 +91,7 @@ export default function Capacity() {
                 return (
                   <tr key={q.id} className={sel === q.id ? "bg-paper" : ""}>
                     <td className="td num text-muted">{i + 1}</td>
-                    <td className="td"><Link href={`/cohorts/${q.id}`} className="num font-semibold hover:underline">{q.code}</Link><div className="text-xs text-muted">SLA {dateShort(q.target_completion_date)} · {titleCase(q.status)}</div></td>
+                    <td className="td"><Link href={cohortHref(q.id)} className="num font-semibold hover:underline">{q.code}</Link><div className="text-xs text-muted">SLA {dateShort(q.target_completion_date)} · {titleCase(q.status)}</div></td>
                     <td className="td">{q.status === "under_review" ? <Chip tone="info">Awaiting decision</Chip> : <Chip tone="good">Approved</Chip>}
                       {q.sla_feasible === false && <div className="mt-1"><Chip tone="bad">Not enough free hours before SLA</Chip></div>}
                       {q.review_required && <div className="mt-1"><Chip tone="warn">Review-slot risk</Chip></div>}</td>

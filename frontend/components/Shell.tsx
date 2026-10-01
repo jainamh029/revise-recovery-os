@@ -6,6 +6,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { DemoBar, DemoGate } from "@/components/DemoGate";
 import { api } from "@/lib/api";
 
 const NAV = [
@@ -90,8 +91,9 @@ export default function Shell({ children }: { children: React.ReactNode }) {
           <Sparkles className="h-3.5 w-3.5 shrink-0" aria-hidden />
           <span className="font-semibold">Illustrative demo · synthetic data</span>
           <span className="hidden truncate opacity-80 md:inline">Not representative of Revise Robotics' internal data, customers, economics, or processes.</span>
+          <DemoBar />
         </div>
-        <main className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+        <main className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8"><DemoGate>{children}</DemoGate></main>
         <footer className="mx-auto max-w-[1400px] px-4 pb-8 sm:px-6 lg:px-8">
           <p className="border-t border-line pt-4 text-xs leading-relaxed text-muted">{DISCLAIMER} Not investment advice; not audited financial reporting. No robot control or live telemetry.</p>
         </footer>

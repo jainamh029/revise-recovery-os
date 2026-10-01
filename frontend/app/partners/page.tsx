@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Bar as Meter, Card, Chip, ErrorBox, Loading, PageHeader, StatusChip } from "@/components/ui";
 import { useApi } from "@/lib/hooks";
 import { money, n, pct, titleCase } from "@/lib/format";
+import { cohortHref } from "@/lib/nav";
 
 const REC: Record<string, { label: string; tone: "good" | "warn" | "bad" | "neutral" }> = {
   expand: { label: "Expand", tone: "good" }, renegotiate: { label: "Renegotiate", tone: "warn" }, reduce_or_stop: { label: "Reduce or stop", tone: "bad" },
@@ -50,7 +51,7 @@ export default function Partners() {
                 </>
               )}
               <div className="mt-4 flex flex-wrap gap-2 border-t border-line pt-3">
-                {p.cohorts.map((c: any) => <Link key={c.id} href={`/cohorts/${c.id}`} className="inline-flex items-center gap-1.5 rounded-md border border-line px-2 py-1 text-xs hover:bg-paper"><span className="num font-semibold">{c.code}</span><StatusChip status={c.status} /></Link>)}
+                {p.cohorts.map((c: any) => <Link key={c.id} href={cohortHref(c.id)} className="inline-flex items-center gap-1.5 rounded-md border border-line px-2 py-1 text-xs hover:bg-paper"><span className="num font-semibold">{c.code}</span><StatusChip status={c.status} /></Link>)}
                 {p.cohorts.length === 0 && <span className="text-xs text-muted">No cohorts yet</span>}
               </div>
             </Card>

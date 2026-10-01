@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, YAxis, XAxis, Tooltip } from "recharts";
 import { C, axis, gridProps, tooltipStyle } from "@/components/charts";
 import { Bar as Meter, Card, Chip, ErrorBox, Field, Loading, PageHeader, StatusChip, Table } from "@/components/ui";
+import { cohortHref } from "@/lib/nav";
 import { api } from "@/lib/api";
 import { useApi } from "@/lib/hooks";
 import { dateShort, money, n, pct, titleCase } from "@/lib/format";
@@ -62,7 +63,7 @@ export default function Operations() {
               {live.length === 0 && <tr><td className="td text-muted" colSpan={6}>No cohorts in processing.</td></tr>}
               {live.map((c) => (
                 <tr key={c.id}>
-                  <td className="td"><Link className="num font-semibold hover:underline" href={`/cohorts/${c.id}`}>{c.code}</Link><div className="text-xs text-muted">{c.partner}</div></td>
+                  <td className="td"><Link className="num font-semibold hover:underline" href={cohortHref(c.id)}>{c.code}</Link><div className="text-xs text-muted">{c.partner}</div></td>
                   <td className="td"><StatusChip status={c.status} /></td>
                   <td className="td num text-right">{n(c.received)} / {n(c.devices)}</td>
                   <td className="td num text-right">{pct(c.plan_cm_pct, 0)}</td>

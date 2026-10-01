@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Plus, Trash2, Wand2 } from "lucide-react";
 import { ChecksList, RecommendationCard, ScenarioTable } from "@/components/cohort/Underwriting";
 import { Card, ErrorBox, Field, Loading, PageHeader } from "@/components/ui";
+import { cohortHref } from "@/lib/nav";
 import { api } from "@/lib/api";
 import { useApi } from "@/lib/hooks";
 import { titleCase } from "@/lib/format";
@@ -97,7 +98,7 @@ export default function NewCohort() {
     try {
       const c = await api("/api/cohorts", { body: { ...body, cohort_name: name || "Untitled cohort" } });
       await api(`/api/cohorts/${c.id}/underwrite`, { method: "POST", body: {} });
-      router.push(`/cohorts/${c.id}`);
+      router.push(cohortHref(c.id));
     } catch (e: any) { setErr(e.message); setBusy(false); }
   };
 

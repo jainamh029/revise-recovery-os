@@ -8,6 +8,7 @@ import { C, axis, gridProps, tooltipStyle } from "@/components/charts";
 import { Bar as Meter, Card, Chip, DecisionChip, Empty, ErrorBox, Hint, Loading, PageHeader, SeverityChip, Stat } from "@/components/ui";
 import { useApi } from "@/lib/hooks";
 import { dateShort, money, n, pct, signedMoney, titleCase } from "@/lib/format";
+import { cohortHref } from "@/lib/nav";
 
 const span = (w?: { start: string | null; end: string }) => (w ? `${w.start ? dateShort(w.start) : "start"} – ${dateShort(w.end)}` : "");
 
@@ -119,7 +120,7 @@ function Dashboard() {
                   </div>
                   {a.recommended_action && <p className="mt-0.5 text-xs text-muted">{a.recommended_action}</p>}
                 </div>
-                {a.cohort_id && <Link className="btn shrink-0" href={`/cohorts/${a.cohort_id}`}>Open {a.cohort_code}</Link>}
+                {a.cohort_id && <Link className="btn shrink-0" href={cohortHref(a.cohort_id)}>Open {a.cohort_code}</Link>}
               </li>
             ))}
           </ul>
@@ -137,7 +138,7 @@ function Dashboard() {
                 <p className="mt-1 text-xs text-muted">{c.name}</p>
                 <div className="mt-2 flex items-center justify-between text-xs">
                   <span className="num">{pct(c.base_cm_pct, 0)} base CM · {money(c.cm_per_robot_hour_plan, {})}/robot-hr</span>
-                  <Link href={`/cohorts/${c.id}`} className="font-semibold text-ink underline underline-offset-2">Review</Link>
+                  <Link href={cohortHref(c.id)} className="font-semibold text-ink underline underline-offset-2">Review</Link>
                 </div>
               </li>
             ))}

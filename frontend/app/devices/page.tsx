@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CheckCircle2, Download, ShieldAlert } from "lucide-react";
 import { Card, Chip, Empty, ErrorBox, Field, Hint, Loading, PageHeader, Stat, Table } from "@/components/ui";
 import { api } from "@/lib/api";
+import { downloadFile } from "@/lib/download";
 import { useApi } from "@/lib/hooks";
 import { titleCase, type Tone } from "@/lib/format";
 
@@ -51,7 +52,7 @@ export default function Devices() {
           </select>
         </Field>
         <Field label="Serial / asset tag"><input className="input" value={q} onChange={(e) => setQ(e.target.value)} placeholder="search…" /></Field>
-        <div className="flex items-end"><a className="btn w-full" href={`/api/export/devices.csv?cohort_id=${cid}`} download><Download className="h-4 w-4" /> Export ledger CSV</a></div>
+        <div className="flex items-end"><button className="btn w-full" onClick={() => downloadFile(`/api/export/devices.csv?cohort_id=${cid}`, "devices.csv")}><Download className="h-4 w-4" /> Export ledger CSV</button></div>
       </div>
 
       {r && (
@@ -142,7 +143,7 @@ function Detail({ id, cohortId, onChange }: { id: string; cohortId: string; onCh
 
   return (
     <Card title={<span className="num">{d.serial_number}</span>} subtitle={`${d.manufacturer ?? ""} ${d.model ?? ""} · ${d.current_location} · custodian ${d.current_custodian}`}
-      actions={<a className="btn" href={`/api/devices/${id}/export?format=csv`} download><Download className="h-3.5 w-3.5" /> Audit</a>}>
+      actions={<button className="btn" onClick={() => downloadFile(`/api/devices/${id}/export?format=csv`, `device-${d.serial_number}.csv`)}><Download className="h-3.5 w-3.5" /> Audit</button>}>
       {(s === "QUARANTINED" || s === "SANITIZATION_FAILED") && (
         <div className="mb-3 flex items-start gap-2 rounded-lg bg-bad-bg p-2.5 text-xs text-bad"><ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" /> Quarantined: blocked from robot processing, resale and shipment until re-sanitized with a passing certificate, or destroyed.</div>
       )}
