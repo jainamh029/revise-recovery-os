@@ -81,7 +81,7 @@ function Tornado({ rows }: { rows: any[] }) {
   const bar = (v: number, dark: boolean) => (
     <div className="relative h-3">
       <div
-        className={`absolute top-0 h-3 ${dark ? "bg-ink" : "bg-[#b9b3a3]"} ${v >= 0 ? "left-1/2 rounded-r" : "right-1/2 rounded-l"}`}
+        className={`absolute top-0 h-3 ${dark ? "bg-ink" : "bg-[#4a5a6d]"} ${v >= 0 ? "left-1/2 rounded-r" : "right-1/2 rounded-l"}`}
         style={{ width: `${(Math.abs(v) / max) * 50}%` }}
       />
     </div>

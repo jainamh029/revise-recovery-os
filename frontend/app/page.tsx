@@ -1,11 +1,11 @@
 "use client";
 import Link from "next/link";
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 import DashboardFilters, { useFilterQuery } from "@/components/DashboardFilters";
 import { ArrowRight, ShieldAlert } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell } from "recharts";
-import { C, axis, gridProps, tooltipStyle } from "@/components/charts";
-import { Bar as Meter, Card, Chip, DecisionChip, Empty, ErrorBox, Hint, Loading, PageHeader, SeverityChip, Stat } from "@/components/ui";
+import { Area, Bar, BarChart, CartesianGrid, ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell } from "recharts";
+import { C, chartDefs, Gauge, PulseDot, axis, gridProps, tooltipStyle } from "@/components/charts";
+import { SegBar, Card, Chip, DecisionChip, Empty, ErrorBox, Hint, Loading, PageHeader, SeverityChip, Stat } from "@/components/ui";
 import { useApi } from "@/lib/hooks";
 import { dateShort, money, n, pct, signedMoney, titleCase } from "@/lib/format";
 import { cohortHref } from "@/lib/nav";
@@ -34,6 +34,7 @@ function Dashboard() {
   const header = (
     <>
       <PageHeader
+        eyebrow="Fleet command · synthetic data"
         title="Executive dashboard"
         subtitle="Are we turning robot capacity into profitable throughput and cash? Plan is the approved underwriting budget; forecast re-runs that model on what has actually happened. CM % is contribution margin ÷ net recognized revenue."
       />
@@ -44,6 +45,7 @@ function Dashboard() {
   if (loading || !d) return <>{header}<Loading label="Computing portfolio" /></>;
 
   const delta = d.forecast_cm - d.plan_cm;
+  const tp = d.throughput_vs_plan.map((r: any) => ({ ...r, label: dateShort(r.date) }));
   const pending = (d.cohorts as any[]).filter((c) => c.status === "under_review");
   const cmBars = (d.cohorts as any[]).filter((c) => c.forecast_cm != null).map((c) => ({
     code: c.code, Plan: c.plan_cm, Forecast: c.forecast_cm, floor: c.below_floor,
@@ -149,37 +151,41 @@ function Dashboard() {
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <Card title="Contribution margin: approved plan vs reforecast" subtitle="Active cohorts. Reforecast re-runs the approved model with observed exception, repair, uptime and price behaviour.">
           {cmBars.length === 0 ? <Empty>No live cohorts in scope.</Empty> : (
-          <div className="h-64" role="img" aria-label="Bar chart comparing plan and forecast contribution margin per active cohort">
+          <div className="scan h-64" role="img" aria-label="Bar chart comparing plan and forecast contribution margin per active cohort">
             <ResponsiveContainer>
               <BarChart data={cmBars} barGap={4}>
+                {chartDefs("cm")}
                 <CartesianGrid {...gridProps} />
                 <XAxis dataKey="code" {...axis} />
                 <YAxis {...axis} tickFormatter={(v) => `$${v / 1000}k`} width={48} />
                 <Tooltip {...tooltipStyle} formatter={(v: number) => money(v)} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Bar dataKey="Plan" fill={C.soft} radius={[4, 4, 0, 0]} />
-                <Bar dataKey="Forecast" radius={[4, 4, 0, 0]}>
-                  {cmBars.map((b, i) => <Cell key={i} fill={b.floor ? C.bad : C.ink} />)}
+                <Bar dataKey="Plan" fill="url(#cm-hatch)" stroke={C.muted} strokeOpacity={0.6} radius={[3, 3, 0, 0]} />
+                <Bar dataKey="Forecast" radius={[3, 3, 0, 0]}>
+                  {cmBars.map((b, i) => <Cell key={i} fill={b.floor ? "url(#cm-bad)" : "url(#cm-accent)"} />)}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
           )}
-          <p className="mt-2 text-xs text-muted">Red = forecast margin below the cohort's approved floor.</p>
+          <p className="mt-2 text-xs text-muted">Red = forecast margin below the cohort's approved floor. Hatched = approved plan.</p>
         </Card>
 
         <Card title="Throughput vs plan" subtitle="Devices started per day, trailing 14 days (plan from approved robot-cell schedule)">
-          <div className="h-64" role="img" aria-label="Line chart of daily devices started versus plan">
+          <div className="scan h-64" role="img" aria-label="Line chart of daily devices started versus plan">
             <ResponsiveContainer>
-              <LineChart data={d.throughput_vs_plan.map((r: any) => ({ ...r, label: dateShort(r.date) }))}>
+              <ComposedChart data={tp}>
+                {chartDefs("tp")}
                 <CartesianGrid {...gridProps} />
                 <XAxis dataKey="label" {...axis} interval={1} />
                 <YAxis {...axis} width={36} />
                 <Tooltip {...tooltipStyle} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Line type="linear" dataKey="plan" name="Plan" stroke={C.soft} strokeWidth={2} strokeDasharray="5 4" dot={false} />
-                <Line type="linear" dataKey="actual" name="Actual" stroke={C.brand} strokeWidth={2.5} dot={false} />
-              </LineChart>
+                <Area type="monotone" dataKey="actual" name="Actual" stroke={C.accent} strokeWidth={2.5} fill="url(#tp-area)" style={{ filter: "drop-shadow(0 0 6px rgba(34,211,238,.6))" }} dot={false} activeDot={{ r: 4 }} />
+                <Line type="stepAfter" dataKey="plan" name="Plan" stroke={C.brand} strokeWidth={1.75} strokeDasharray="5 4" dot={false} />
+                <Line dataKey="actual" legendType="none" stroke="transparent" tooltipType="none" isAnimationActive={false}
+                  dot={(p: any) => (p.index === tp.length - 1 ? <PulseDot key="last" cx={p.cx} cy={p.cy} /> : <g key={p.index} />)} />
+              </ComposedChart>
             </ResponsiveContainer>
           </div>
         </Card>
@@ -187,18 +193,24 @@ function Dashboard() {
 
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
         <Card title="Robot cells · 14d utilization" subtitle="Productive hours ÷ scheduled, excluding planned maintenance">
+          <div className="mb-4 flex justify-center">
+            <Gauge value={d.utilization} label="Utilization" tone={d.utilization < 0.65 && d.utilization > 0 ? "warn" : "accent"} size={150} />
+          </div>
           <ul className="space-y-3">
             {d.cells.map((c: any) => (
               <li key={c.id}>
                 <div className="mb-1 flex items-center justify-between text-sm">
-                  <span className="font-medium">{c.name}</span>
+                  <span className="flex items-center gap-2 font-medium">
+                    <span className="led led-pulse" style={{ "--led": c.status !== "available" ? "138 153 171" : c.utilization < 0.05 ? "96 165 250" : c.utilization < 0.65 ? "251 191 36" : "52 211 153" } as React.CSSProperties} aria-hidden />
+                    {c.name}
+                  </span>
                   <span className="flex items-center gap-2">
                     {c.status !== "available" && <Chip>{titleCase(c.status)}</Chip>}
                     {c.status === "available" && c.utilization < 0.05 && <Chip tone="info">Idle</Chip>}
                     <span className="num text-sm">{c.status === "available" ? pct(c.utilization, 0) : "—"}</span>
                   </span>
                 </div>
-                <Meter value={c.utilization} tone={c.status !== "available" ? "neutral" : c.utilization < 0.65 ? "warn" : "good"} />
+                <SegBar value={c.status === "available" ? c.utilization : 0} warnAt={0.65} tone={c.status !== "available" ? "neutral" : c.utilization < 0.65 ? "warn" : "good"} />
                 {c.downtime_hours > 8 && <p className="mt-1 text-xs text-warn">{n(c.downtime_hours, 0)}h downtime in window</p>}
               </li>
             ))}
@@ -223,15 +235,16 @@ function Dashboard() {
         </Card>
 
         <Card title="Cash still to come in" subtitle="Receivables by days past due">
-          <div className="h-44" role="img" aria-label="Bar chart of outstanding collections by age bucket">
+          <div className="scan h-44" role="img" aria-label="Bar chart of outstanding collections by age bucket">
             <ResponsiveContainer>
               <BarChart data={Object.entries(d.collections_buckets).map(([k, v]) => ({ bucket: k === "current" ? "Not due" : k + "d", v }))}>
+                {chartDefs("col")}
                 <CartesianGrid {...gridProps} />
                 <XAxis dataKey="bucket" {...axis} />
                 <YAxis {...axis} tickFormatter={(v) => `$${v / 1000}k`} width={44} />
                 <Tooltip {...tooltipStyle} formatter={(v: number) => money(v)} />
-                <Bar dataKey="v" name="Outstanding" radius={[4, 4, 0, 0]}>
-                  {Object.keys(d.collections_buckets).map((k, i) => <Cell key={k} fill={i === 0 ? C.soft : i === 1 ? C.warn : C.bad} />)}
+                <Bar dataKey="v" name="Outstanding" radius={[3, 3, 0, 0]}>
+                  {Object.keys(d.collections_buckets).map((k, i) => <Cell key={k} fill={i === 0 ? "url(#col-soft)" : i === 1 ? "url(#col-warn)" : "url(#col-bad)"} />)}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>

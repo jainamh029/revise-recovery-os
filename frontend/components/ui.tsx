@@ -33,10 +33,11 @@ export const SeverityChip = ({ severity }: { severity: string }) => (
   <Chip tone={severity === "critical" ? "bad" : severity === "warning" ? "warn" : "info"}>{titleCase(severity)}</Chip>
 );
 
-export function PageHeader({ title, subtitle, actions }: { title: string; subtitle?: React.ReactNode; actions?: React.ReactNode }) {
+export function PageHeader({ title, subtitle, actions, eyebrow }: { title: string; subtitle?: React.ReactNode; actions?: React.ReactNode; eyebrow?: React.ReactNode }) {
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+    <div className="rise mb-6 flex flex-wrap items-end justify-between gap-3">
       <div className="max-w-3xl">
+        {eyebrow && <div className="eyebrow mb-1.5 flex items-center gap-2 text-accent"><span className="led led-pulse" style={{ "--led": "34 211 238" } as React.CSSProperties} aria-hidden />{eyebrow}</div>}
         <h1 className="text-[26px] font-semibold leading-tight tracking-tight">{title}</h1>
         {subtitle && <p className="mt-1 text-sm text-muted">{subtitle}</p>}
       </div>
@@ -53,7 +54,7 @@ export function Card({ title, subtitle, actions, children, className, pad = true
       {(title || actions) && (
         <header className="flex items-start justify-between gap-3 border-b border-line px-4 py-3">
           <div>
-            <h2 className="text-[15px] font-semibold">{title}</h2>
+            <h2 className="text-[15px] font-semibold tracking-tight">{title}</h2>
             {subtitle && <p className="mt-0.5 text-xs text-muted">{subtitle}</p>}
           </div>
           {actions}
@@ -66,8 +67,9 @@ export function Card({ title, subtitle, actions, children, className, pad = true
 
 export function Stat({ label, value, sub, tone, hint, id, href }: { label: string; value: React.ReactNode; sub?: React.ReactNode; tone?: Tone; hint?: string; id?: string; href?: string }) {
   const body = (
-    <div className={clsx("card p-4", href && "transition hover:border-ink/40 hover:shadow-md")} title={hint} data-testid={id ? `stat-${id}` : undefined}>
-      <div className="eyebrow flex items-center justify-between gap-2">{label}{href && <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-muted" aria-hidden />}</div>
+    <div className={clsx("card rise overflow-hidden p-4", href && "transition hover:border-accent/60 hover:shadow-glow")} title={hint} data-testid={id ? `stat-${id}` : undefined}>
+      <span aria-hidden className={clsx("absolute inset-x-0 top-0 h-[2px]", tone === "bad" ? "bg-bad" : tone === "warn" ? "bg-warn" : tone === "good" ? "bg-good" : "bg-gradient-to-r from-accent/70 via-accent/10 to-transparent")} />
+      <div className="eyebrow flex items-center justify-between gap-2">{label}{href && <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-accent/70" aria-hidden />}</div>
       <div className={clsx("num mt-1.5 text-[26px] font-semibold leading-none", tone === "bad" && "text-bad", tone === "good" && "text-good", tone === "warn" && "text-warn")}>
         {value}
       </div>
@@ -76,7 +78,7 @@ export function Stat({ label, value, sub, tone, hint, id, href }: { label: strin
   );
   if (!href) return body;
   return (
-    <Link href={href} data-testid={id ? `link-${id}` : undefined} aria-label={`${label}: open detail`} className="block rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink">
+    <Link href={href} data-testid={id ? `link-${id}` : undefined} aria-label={`${label}: open detail`} className="block rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
       {body}
     </Link>
   );
@@ -155,6 +157,20 @@ export function Bar({ value, max = 1, tone = "neutral" }: { value: number; max?:
   return (
     <div className="h-1.5 w-full overflow-hidden rounded-full bg-paper">
       <div className={clsx("h-full rounded-full", color)} style={{ width: `${w}%` }} />
+    </div>
+  );
+}
+
+/** Segmented "battery" meter: reads like a robot-cell power/utilisation bar. `warnAt` draws the policy line. */
+export function SegBar({ value, tone = "neutral", segments = 20, warnAt }: { value: number; tone?: Tone; segments?: number; warnAt?: number }) {
+  const on = Math.round(Math.max(0, Math.min(1, value)) * segments);
+  const color = tone === "good" ? "bg-good shadow-[0_0_6px_rgba(52,211,153,.7)]" : tone === "warn" ? "bg-warn shadow-[0_0_6px_rgba(251,191,36,.7)]" : tone === "bad" ? "bg-bad shadow-[0_0_6px_rgba(248,113,113,.7)]" : "bg-accent shadow-[0_0_6px_rgba(34,211,238,.6)]";
+  const mark = warnAt != null ? Math.round(warnAt * segments) : -1;
+  return (
+    <div className="flex gap-[3px]" aria-hidden>
+      {Array.from({ length: segments }, (_, i) => (
+        <span key={i} className={clsx("h-3 flex-1 rounded-[2px]", i < on ? color : "bg-line/70", i === mark && i >= on && "border-l border-warn/70")} />
+      ))}
     </div>
   );
 }

@@ -79,7 +79,7 @@ export default function DashboardFilters({ applied, count }: { applied?: { key: 
     <section className="card mb-4 p-4" aria-label="Dashboard filters">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2 text-sm font-semibold"><Filter className="h-4 w-4" aria-hidden /> Filters
-          <span data-testid="filter-count" className={`num rounded-md px-1.5 py-0.5 text-xs ${n ? "bg-ink text-white" : "bg-paper text-muted"}`}>{n} active</span>
+          <span data-testid="filter-count" className={`num rounded-md px-1.5 py-0.5 text-xs ${n ? "bg-accent text-on-accent" : "bg-paper text-muted"}`}>{n} active</span>
         </div>
         <button className="btn" onClick={() => { setDateErr(null); pending.current = ""; sent.current.push(""); router.replace(path, { scroll: false }); }} disabled={!q.toString()} data-testid="clear-filters"><X className="h-3.5 w-3.5" /> Clear filters</button>
       </div>

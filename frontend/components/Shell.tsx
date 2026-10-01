@@ -1,7 +1,7 @@
 "use client";
 import clsx from "clsx";
 import {
-  Bell, CalendarRange, ScanBarcode, Coins, FileCheck2, Gauge, LayoutDashboard, Menu, SlidersHorizontal, Sparkles, Users, X, Activity,
+  Bell, CalendarRange, ScanBarcode, Coins, FileCheck2, Gauge, LayoutDashboard, Menu, SlidersHorizontal, Sparkles, Users, X, Activity, Bot,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -48,7 +48,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
             aria-current={active ? "page" : undefined}
             className={clsx(
               "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition",
-              active ? "bg-white/10 text-white" : "text-white/60 hover:bg-white/5 hover:text-white"
+              active ? "bg-accent/10 text-white shadow-[inset_2px_0_0_rgb(var(--c-accent))]" : "text-white/60 hover:bg-white/5 hover:text-white"
             )}
           >
             <Icon className="h-4 w-4" aria-hidden />
@@ -66,10 +66,11 @@ export default function Shell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen lg:flex">
-      <aside className="hidden w-60 shrink-0 flex-col bg-side py-5 lg:flex">
+      <aside className="hidden w-60 shrink-0 flex-col border-r border-line bg-side/95 py-5 lg:flex">
         <Brand />
         {nav}
-        <p className="mx-5 mt-4 text-[11px] leading-relaxed text-white/40">
+        <div className="eyebrow mx-5 mt-4 flex items-center gap-2 text-good"><span className="led led-pulse" aria-hidden />Engine online</div>
+        <p className="mx-5 mt-2 text-[11px] leading-relaxed text-white/40">
           Deterministic backend engine. The UI only displays results — no finance logic runs in the browser.
         </p>
       </aside>
@@ -86,7 +87,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
       )}
 
       <div className="min-w-0 flex-1">
-        <div className="sticky top-0 z-30 flex items-center gap-3 border-b border-warn/30 bg-warn-bg px-4 py-1.5 text-xs text-warn" title={DISCLAIMER}>
+        <div className="sticky top-0 z-30 flex items-center gap-3 border-b border-warn/30 bg-warn-bg/95 px-4 py-1.5 text-xs text-warn backdrop-blur" title={DISCLAIMER}>
           <button className="lg:hidden" onClick={() => setOpen(true)} aria-label="Open menu"><Menu className="h-5 w-5" /></button>
           <Sparkles className="h-3.5 w-3.5 shrink-0" aria-hidden />
           <span className="font-semibold">Illustrative demo · synthetic data</span>
@@ -106,7 +107,7 @@ function Brand() {
   return (
     <div className="mb-6 px-5">
       <div className="flex items-center gap-2.5">
-        <div className="grid h-8 w-8 place-items-center rounded-lg bg-brand text-sm font-bold text-white">R</div>
+        <div className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-brand to-brand/60 text-white shadow-[0_0_18px_-2px_rgba(255,106,61,.65)]"><Bot className="h-5 w-5" aria-hidden /></div>
         <div>
           <div className="text-[15px] font-semibold leading-none text-white">Recovery OS</div>
           <div className="mt-1 text-[11px] leading-none text-white/50">Operating finance for refurbishment</div>
